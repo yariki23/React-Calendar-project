@@ -1,29 +1,39 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/header/Header.jsx";
 import Calendar from "./components/calendar/Calendar.jsx";
+import moment from "moment";
 
 import { getWeekStartDate, generateWeekRange } from "../src/utils/dateUtils.js";
 
 import "./common.scss";
 
 const App = () => {
-  const [date, setDate] = useState({
-    weekStartDate: new Date(),
-    weekBack: null,
-  });
+  const [date, setDate] = useState(moment());
+  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    function handlerWeekBack() {
-      const weekDates = generateWeekRange(getWeekStartDate(weekStartDate));
-    }
-  });
+  const handlerWeekBack = () => {
+    setDate(date.subtract(7, "days"));
+    setCount(count + 1);
+  };
+  const handlerWeekNext = () => {
+    setDate(date.add(7, "days"));
+    setCount(count - 1);
+  };
 
-  const { weekStartDate } = date;
-  getWeekStartDate(weekStartDate);
-  const weekDates = generateWeekRange(getWeekStartDate(weekStartDate));
+  const handleToDay = () => {
+    setDate(moment());
+  };
+
+  const weekDates = generateWeekRange(getWeekStartDate(date._d));
+
   return (
     <>
-      <Header />
+      <Header
+        handlerWeekBack={handlerWeekBack}
+        handlerWeekNext={handlerWeekNext}
+        handleToDay={handleToDay}
+        weekDates={weekDates}
+      />
       <Calendar weekDates={weekDates} />
     </>
   );
