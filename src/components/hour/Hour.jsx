@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import Event from '../event/Event';
-import { formatMins } from '../../../src/utils/dateUtils.js';
+import Event from "../event/Event";
+import { formatMins } from "../../../src/utils/dateUtils.js";
+import "./hour.scss";
 
 const Hour = ({ dataHour, hourEvents }) => {
   return (
