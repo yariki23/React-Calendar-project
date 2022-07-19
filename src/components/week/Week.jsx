@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Day from "../day/Day";
+import moment from "moment";
 
 import "./week.scss";
 
-const Week = ({ weekDates, events }) => {
+const Week = ({ weekDates, listEvents, deleteEvent }) => {
+  const [redLineMargin, setRedLineMargin] = useState(0);
+  const toDay = moment().format("ddd MMM DD YYYY");
+
   return (
     <div className="calendar__week">
       {weekDates.map((dayStart) => {
@@ -11,16 +15,30 @@ const Week = ({ weekDates, events }) => {
           dayStart.getHours() + 24
         );
 
+        const redLine =
+          toDay === dayStart.toDateString()
+            ? (margin) => {
+                return (
+                  <div
+                    className="red-line"
+                    style={{marginTop: `${margin}px`}}
+                  ></div>
+                );
+              }
+            : null;
         //getting all events from the day we will render
-        const dayEvents = events.filter(
+        const dayEvents = listEvents.filter(
           (event) => event.dateFrom > dayStart && event.dateTo < dayEnd
         );
 
         return (
           <Day
+            redLine={redLine}
+            weekDates={weekDates}
             key={dayStart.getDate()}
             dataDay={dayStart.getDate()}
             dayEvents={dayEvents}
+            deleteEvent={deleteEvent}
           />
         );
       })}

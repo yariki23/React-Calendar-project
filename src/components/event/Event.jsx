@@ -1,18 +1,41 @@
-import React from 'react';
+import React from "react";
 
-import './event.scss';
+import "./event.scss";
 
-const Event = ({ height, marginTop, title, time }) => {
+const Event = ({
+  height,
+  marginTop,
+  title,
+  time,
+  isOpenDelEvent,
+  triggerModalDel,
+  deleteEvent,
+  id
+}) => {
   const eventStyle = {
     height,
     marginTop,
   };
 
   return (
-    <div style={eventStyle} className="event">
-      <div className="event__title">{title}</div>
-      <div className="event__time">{time}</div>
-    </div>
+    <>
+      <div style={eventStyle} className="event" onClick={triggerModalDel}>
+        <div className="event__title">{title}</div>
+        <div className="event__time">{time}</div>
+      </div>
+      <div>
+        {isOpenDelEvent && (
+          <button
+            onClick={() => {
+              triggerModalDel();
+              deleteEvent(id);
+            }}
+          >
+            Удалить
+          </button>
+        )}
+      </div>
+    </>
   );
 };
 
