@@ -14,10 +14,10 @@ const Hour = ({ dataHour, hourEvents, deleteEvent, redLine }) => {
   useEffect(() => {
     let timer = setTimeout(() => {
       setRedLineMargin(new Date().getMinutes());
-    }, 60000);
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, []);
+  });
 
   return (
     <div className="calendar__time-slot" data-time={dataHour + 1}>

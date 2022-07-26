@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Day from "../day/Day";
 import moment from "moment";
 
 import "./week.scss";
 
 const Week = ({ weekDates, listEvents, deleteEvent }) => {
-  const [redLineMargin, setRedLineMargin] = useState(0);
   const toDay = moment().format("ddd MMM DD YYYY");
 
   return (

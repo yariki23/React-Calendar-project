@@ -19,11 +19,29 @@ export const generateWeekRange = (startDate) => {
   return result;
 };
 
+export const getTimeFromDate = (date) => {
+  return `${date.getHours()}:${formatMins(date.getMinutes())}`;
+};
+
 export const getDateTime = (date, time) => {
+  if (time === undefined) return;
   const [hours, minutes] = time.split(":");
   const withHours = new Date(new Date(date).setHours(Number(hours)));
   const withMinutes = new Date(new Date(withHours).setMinutes(Number(minutes)));
   return withMinutes;
+};
+
+export const getQuarter = (date) => {
+  const minutes = date.getMinutes();
+  if (minutes > 0 && minutes <= 15) {
+    return new Date(date.setMinutes(date.getMinutes() + (15 - minutes)));
+  } else if (minutes > 15 && minutes <= 30) {
+    return new Date(date.setMinutes(date.getMinutes() + (30 - minutes)));
+  } else if (minutes > 30 && minutes <= 45) {
+    return new Date(date.setMinutes(date.getMinutes() + (45 - minutes)));
+  } else {
+    return new Date(date.setMinutes(date.getMinutes() + (60 - minutes)));
+  }
 };
 
 export const formatMins = (mins) => {

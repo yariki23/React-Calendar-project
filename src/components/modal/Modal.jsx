@@ -1,9 +1,37 @@
-import React, { useState } from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 import events from "../../gateway/events.js";
 import "./modal.scss";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import {
+  getTimeFromDate,
+  getDateTime,
+  getQuarter,
+} from "../../utils/dateUtils.js";
 
 const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
-  const [dataEvent, setDataEvent] = useState({});
+  const defaultDateEvent = {
+    date: new Date(),
+    startTime: getQuarter(new Date()),
+    endTime: getQuarter(
+      new Date(new Date().setHours(new Date().getHours() + 1))
+    ),
+  };
+  const [date, setDate] = useState(defaultDateEvent.date);
+  const [startTime, setStartTime] = useState(defaultDateEvent.startTime);
+  const [endTime, setEndTime] = useState(defaultDateEvent.endTime);
+  const [dataEvent, setDataEvent] = useState({
+    title: "",
+  });
+
+  const calculateMinTime = () => {
+    let isToday = moment(date).isSame(moment(), "day");
+    if (isToday) {
+      return moment(new Date()).toDate();
+    }
+    return moment().startOf("day").toDate();
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -12,7 +40,21 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
     });
   };
 
+  useEffect(() => {
+    setDataEvent((prev) => {
+      return {
+        ...prev,
+        date: moment(date).format("YYYY M DD"),
+        dateFrom: getTimeFromDate(startTime),
+        dateTo: getTimeFromDate(endTime),
+      };
+    });
+  }, [date, startTime, endTime]);
+
   const resetStateModal = () => {
+    setDate(defaultDateEvent.date);
+    setStartTime(defaultDateEvent.startTime);
+    setEndTime(defaultDateEvent.endTime);
     setDataEvent({});
   };
 
@@ -22,11 +64,18 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
       id: events.length + 1,
       title: dataEvent.title,
       description: dataEvent.description,
-      dateFrom: new Date(`${dataEvent.date} ${dataEvent.startTime}`),
-      dateTo: new Date(`${dataEvent.date} ${dataEvent.endTime}`),
+      dateFrom: getDateTime(dataEvent.date, dataEvent.dateFrom),
+      dateTo: getDateTime(dataEvent.date, dataEvent.dateTo),
     };
 
     addEvent(event);
+  };
+
+  const getEndTime = (startTime, endTime) => {
+    if (startTime >= endTime) {
+      return startTime;
+    }
+    return endTime;
   };
 
   if (!trigger) {
@@ -40,6 +89,7 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
           onSubmit={(e) => {
             createEvent(e);
             hideModalCreateEvent();
+            resetStateModal();
           }}
         >
           <button
@@ -59,29 +109,45 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
               className="event-form__field"
               value={dataEvent.title}
               onChange={handleChange}
+              required
             />
             <div className="event-form__time">
-              <input
-                type="date"
+              <DatePicker
+                className="event-form__field date-picker"
+                closeOnScroll={true}
+                selected={date}
+                minDate={new Date()}
+                onChange={(date) => setDate(date)}
                 name="date"
-                className="event-form__field"
-                value={dataEvent.date}
-                onChange={handleChange}
+                onKeyDown={(e) => e.preventDefault()}
               />
-              <input
-                type="time"
+              <DatePicker
+                selected={startTime}
+                onChange={(timeFrom) => setStartTime(timeFrom)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                minTime={calculateMinTime()}
+                maxTime={moment().endOf("day").toDate()}
+                timeCaption="Time"
+                dateFormat="p"
+                className="event-form__field time-picker"
                 name="startTime"
-                className="event-form__field"
-                value={dataEvent.dateFrom}
-                onChange={handleChange}
+                onKeyDown={(e) => e.preventDefault()}
               />
               <span>-</span>
-              <input
-                type="time"
+              <DatePicker
+                selected={getEndTime(startTime, endTime)}
+                onChange={(timeTo) => setEndTime(timeTo)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                minTime={startTime}
+                maxTime={moment().endOf("day").toDate()}
+                dateFormat="p"
+                className="event-form__field time-picker"
                 name="endTime"
-                className="event-form__field"
-                value={dataEvent.dateFrom}
-                onChange={handleChange}
+                onKeyDown={(e) => e.preventDefault()}
               />
             </div>
             <textarea

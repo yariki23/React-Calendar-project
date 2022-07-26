@@ -10,7 +10,7 @@ const Event = ({
   isOpenDelEvent,
   triggerModalDel,
   deleteEvent,
-  id
+  id,
 }) => {
   const eventStyle = {
     height,
@@ -26,6 +26,8 @@ const Event = ({
       <div>
         {isOpenDelEvent && (
           <button
+            style={{marginTop}}
+            className="delete-event-btn"
             onClick={() => {
               triggerModalDel();
               deleteEvent(id);
