@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     fetchData().then((res) => setListEvents(res));
   }, []);
-  console.log(listEvents);
+
   const handlerWeekBack = () => {
     setDate(date.subtract(7, "days"));
     setCount(count + 1);
