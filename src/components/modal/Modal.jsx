@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import events from "../../gateway/events.js";
 import "./modal.scss";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,6 +7,7 @@ import {
   getTimeFromDate,
   getDateTime,
   getQuarter,
+  calculateMinTime,
 } from "../../utils/dateUtils.js";
 
 const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
@@ -24,14 +24,6 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
   const [dataEvent, setDataEvent] = useState({
     title: "",
   });
-
-  const calculateMinTime = () => {
-    let isToday = moment(date).isSame(moment(), "day");
-    if (isToday) {
-      return moment(new Date()).toDate();
-    }
-    return moment().startOf("day").toDate();
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -55,13 +47,12 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
     setDate(defaultDateEvent.date);
     setStartTime(defaultDateEvent.startTime);
     setEndTime(defaultDateEvent.endTime);
-    setDataEvent({});
+    setDataEvent({ title: "" });
   };
 
   const createEvent = (e) => {
     e.preventDefault();
     const event = {
-      id: events.length + 1,
       title: dataEvent.title,
       description: dataEvent.description,
       dateFrom: getDateTime(dataEvent.date, dataEvent.dateFrom),
@@ -127,7 +118,7 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={15}
-                minTime={calculateMinTime()}
+                minTime={calculateMinTime(date)}
                 maxTime={moment().endOf("day").toDate()}
                 timeCaption="Time"
                 dateFormat="p"

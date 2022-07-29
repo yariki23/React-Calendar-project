@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const getWeekStartDate = (date) => {
   const dateCopy = new Date(date);
   const dayOfWeek = dateCopy.getDay();
@@ -17,6 +19,14 @@ export const generateWeekRange = (startDate) => {
     result.push(new Date(base.setDate(base.getDate() + i)));
   }
   return result;
+};
+
+export const calculateMinTime = (date) => {
+  let isToday = moment(date).isSame(moment(), "day");
+  if (isToday) {
+    return moment(new Date()).toDate();
+  }
+  return moment().startOf("day").toDate();
 };
 
 export const getTimeFromDate = (date) => {

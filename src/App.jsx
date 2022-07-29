@@ -1,18 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/header/Header.jsx";
 import Calendar from "./components/calendar/Calendar.jsx";
+import { createEventServer } from "./gateway/eventsGateway";
 import moment from "moment";
+import { deleteTask, fetchData } from "./gateway/eventsGateway";
 import { getWeekStartDate, generateWeekRange } from "../src/utils/dateUtils.js";
 import "./common.scss";
 import Modal from "./components/modal/Modal.jsx";
-import events from "./gateway/events.js";
 
 const App = () => {
   const [date, setDate] = useState(moment());
   const [count, setCount] = useState(0);
   const [isOpenCreateEvent, setIsOpenCreateEvent] = useState(false);
-  const [listEvents, setListEvents] = useState([...events]);
+  const [listEvents, setListEvents] = useState([{}]);
 
+  useEffect(() => {
+    fetchData().then((res) => setListEvents(res));
+  }, []);
+  console.log(listEvents);
   const handlerWeekBack = () => {
     setDate(date.subtract(7, "days"));
     setCount(count + 1);
@@ -35,10 +40,12 @@ const App = () => {
   };
 
   const addEvent = (dataEvent) => {
-    setListEvents((arrEvents) => [...arrEvents, dataEvent]);
+    const allEvents = createEventServer(dataEvent);
+    allEvents.then((res) => setListEvents(res));
   };
 
   const deleteEvent = (id) => {
+    deleteTask(id);
     setListEvents(listEvents.filter((event) => event.id !== id));
   };
 

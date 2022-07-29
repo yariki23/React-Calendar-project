@@ -20,14 +20,16 @@ const Week = ({ weekDates, listEvents, deleteEvent }) => {
                 return (
                   <div
                     className="red-line"
-                    style={{marginTop: `${margin}px`}}
+                    style={{ marginTop: `${margin}px` }}
                   ></div>
                 );
               }
             : null;
         //getting all events from the day we will render
         const dayEvents = listEvents.filter(
-          (event) => event.dateFrom > dayStart && event.dateTo < dayEnd
+          (event) =>
+            new Date(event.dateFrom) > dayStart &&
+            new Date(event.dateTo) < dayEnd
         );
 
         return (
