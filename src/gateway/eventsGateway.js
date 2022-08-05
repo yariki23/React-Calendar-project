@@ -7,15 +7,9 @@ export const createEventServer = async (eventData) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(eventData),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Faild to create task");
-      }
-    })
-    .catch(() => {
-      alert("Internal Server Error. Can't display events");
-    });
+  }).catch(() => {
+    alert("Internal Server Error. Can't display events");
+  });
 
   const response = await fetch(baseUrl);
   const data = await response.json();
@@ -33,14 +27,7 @@ export const fetchData = () => {
 export const deleteTask = (eventId) => {
   return fetch(`${baseUrl}/${eventId}`, {
     method: "DELETE",
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to create task");
-      }
-    })
-    .catch(() => {
-      alert("Internal Server Error. Can't display events");
-    });
-;
+  }).catch(() => {
+    alert("Internal Server Error. Can't display events");
+  });
 };

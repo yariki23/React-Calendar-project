@@ -25,7 +25,6 @@ const Hour = ({ dataHour, hourEvents, deleteEvent, redLine }) => {
         ? new Date().getHours() === dataHour && redLine(redLineMargin)
         : redLine}
 
-      {/* if no events in the current hour nothing will render here */}
       {hourEvents.map(({ id, dateFrom, dateTo, title }) => {
         const eventStart = `${new Date(dateFrom).getHours()}:${formatMins(
           new Date(dateFrom).getMinutes()
@@ -39,8 +38,10 @@ const Hour = ({ dataHour, hourEvents, deleteEvent, redLine }) => {
             key={id}
             id={id}
             triggerModalDel={triggerModalDel}
-            //calculating event height = duration of event in minutes
-            height={(new Date(dateTo).getTime() - new Date(dateFrom).getTime()) / (1000 * 60)}
+            height={
+              (new Date(dateTo).getTime() - new Date(dateFrom).getTime()) /
+              (1000 * 60)
+            }
             marginTop={new Date(dateFrom).getMinutes()}
             time={`${eventStart} - ${eventEnd}`}
             title={title}

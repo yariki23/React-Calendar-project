@@ -21,6 +21,11 @@ export const generateWeekRange = (startDate) => {
   return result;
 };
 
+export const eventDuration = (event) => {
+  const msEventLenght = event.dateTo - event.dateFrom;
+  return msEventLenght > 21600000;
+};
+
 export const calculateMinTime = (date) => {
   let isToday = moment(date).isSame(moment(), "day");
   if (isToday) {
@@ -52,6 +57,38 @@ export const getQuarter = (date) => {
   } else {
     return new Date(date.setMinutes(date.getMinutes() + (60 - minutes)));
   }
+};
+
+export const checkOverlayEvent = (allEvents, event) => {
+  return allEvents.some((elemEvent) => {
+    return (
+      (String(new Date(elemEvent.dateFrom)) >= String(event.dateFrom) &&
+        String(new Date(elemEvent.dateFrom)) <= String(event.dateTo)) ||
+      (String(new Date(elemEvent.dateTo)) >= String(event.dateFrom) &&
+        String(new Date(elemEvent.dateTo)) <= String(event.dateTo)) ||
+      (String(new Date(elemEvent.dateFrom)) <= String(event.dateFrom) &&
+        String(new Date(elemEvent.dateTo)) >= String(event.dateFrom))
+    );
+  });
+};
+
+export const checkOnDel = (allEvents, id) => {
+  const selectedEvent = allEvents.filter((event) => event.id === id);
+
+  return getQuarter(new Date()).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }) ===
+      new Date(selectedEvent[0].dateFrom).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      });
 };
 
 export const formatMins = (mins) => {

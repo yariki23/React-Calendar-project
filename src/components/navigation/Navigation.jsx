@@ -1,6 +1,5 @@
 import React from "react";
 import moment from "moment";
-
 import { days } from "../../utils/dateUtils.js";
 
 const Navigation = ({ weekDates }) => {

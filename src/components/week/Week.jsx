@@ -25,7 +25,7 @@ const Week = ({ weekDates, listEvents, deleteEvent }) => {
                 );
               }
             : null;
-        //getting all events from the day we will render
+
         const dayEvents = listEvents.filter(
           (event) =>
             new Date(event.dateFrom) > dayStart &&

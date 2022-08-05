@@ -4,7 +4,11 @@ import Calendar from "./components/calendar/Calendar.jsx";
 import { createEventServer } from "./gateway/eventsGateway";
 import moment from "moment";
 import { deleteTask, fetchData } from "./gateway/eventsGateway";
-import { getWeekStartDate, generateWeekRange } from "../src/utils/dateUtils.js";
+import {
+  getWeekStartDate,
+  generateWeekRange,
+  checkOnDel,
+} from "../src/utils/dateUtils.js";
 import "./common.scss";
 import Modal from "./components/modal/Modal.jsx";
 
@@ -45,6 +49,10 @@ const App = () => {
   };
 
   const deleteEvent = (id) => {
+    if (checkOnDel(listEvents, id)) {
+      return;
+    }
+
     deleteTask(id);
     setListEvents(listEvents.filter((event) => event.id !== id));
   };

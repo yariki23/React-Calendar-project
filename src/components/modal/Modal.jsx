@@ -8,9 +8,11 @@ import {
   getDateTime,
   getQuarter,
   calculateMinTime,
+  checkOverlayEvent,
+  eventDuration,
 } from "../../utils/dateUtils.js";
 
-const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
+const Modal = ({ trigger, hideModalCreateEvent, addEvent, listEvents }) => {
   const defaultDateEvent = {
     date: new Date(),
     startTime: getQuarter(new Date()),
@@ -18,6 +20,7 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
       new Date(new Date().setHours(new Date().getHours() + 1))
     ),
   };
+
   const [date, setDate] = useState(defaultDateEvent.date);
   const [startTime, setStartTime] = useState(defaultDateEvent.startTime);
   const [endTime, setEndTime] = useState(defaultDateEvent.endTime);
@@ -58,6 +61,15 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
       dateFrom: getDateTime(dataEvent.date, dataEvent.dateFrom),
       dateTo: getDateTime(dataEvent.date, dataEvent.dateTo),
     };
+
+    if (checkOverlayEvent(listEvents, event)) {
+      alert("events cannot overlap in time");
+      return;
+    }
+    if (eventDuration(event)) {
+      alert("event cannot be more than 6 hours");
+      return;
+    }
 
     addEvent(event);
   };
@@ -127,6 +139,7 @@ const Modal = ({ trigger, hideModalCreateEvent, addEvent }) => {
                 onKeyDown={(e) => e.preventDefault()}
               />
               <span>-</span>
+
               <DatePicker
                 selected={getEndTime(startTime, endTime)}
                 onChange={(timeTo) => setEndTime(timeTo)}
