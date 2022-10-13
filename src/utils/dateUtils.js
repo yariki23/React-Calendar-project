@@ -75,20 +75,22 @@ export const checkOverlayEvent = (allEvents, event) => {
 export const checkOnDel = (allEvents, id) => {
   const selectedEvent = allEvents.filter((event) => event.id === id);
 
-  return getQuarter(new Date()).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  }) ===
-      new Date(selectedEvent[0].dateFrom).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      });
+  return (
+    getQuarter(new Date()).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }) ===
+    new Date(selectedEvent[0].dateFrom).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    })
+  );
 };
 
 export const formatMins = (mins) => {
